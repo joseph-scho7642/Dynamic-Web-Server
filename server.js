@@ -9,7 +9,7 @@ let sqlite3 = require('sqlite3');
 
 let public_dir = path.join(__dirname, 'public');
 let template_dir = path.join(__dirname, 'templates');
-let db_filename = path.join(__dirname, 'db', 'YOUR_DATABASE_FILE.sqlite3'); // <-- change this
+let db_filename = path.join(__dirname, 'cereal.sqlite3');
 
 let app = express();
 let port = 8000;
@@ -30,23 +30,54 @@ app.use(express.static(public_dir));
 
 // GET request handler for home page '/' (redirect to desired route)
 app.get('/', (req, res) => {
-    let home = ''; // <-- change this
+    let home = '/cereal/a'; // <-- change this
     res.redirect(home);
 });
 
-/*
-// Example GET request handler for data about a specific year
-app.get('/year/:selected_year', (req, res) => {
-    console.log(req.params.selected_year);
-    fs.readFile(path.join(template_dir, 'year.html'), (err, template) => {
+// GET request handler for cereal from a specific manufacturer
+app.get('/cereal/:mfr', (req, res) => {
+    console.log(req.params.mfr);
+    fs.readFile(path.join(template_dir, 'services_template.html'), (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
+        let query = 'SELECT Manufacturers.name AS mfr, Cereals.name, Cereals.calories, Cereals.carbohydrates, \
+                    Cereals.protein, Cereals.fat, Cereals.rating FROM Cereals INNER JOIN Manufacturers \
+                    ON Cereals.mfr = Manufacturers.id WHERE Cereals.mfr = ?'; // We use ? instead of req.params.mfr because then someone could inject hazardous code
 
-        res.status(200).type('html').send(template); // <-- you may need to change this
+        let mfr = req.params.mfr.toUpperCase();
+        db.all(query, [mfr], (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
+            console.log(err);
+            console.log(rows);
+
+            let response = template.toString();
+
+            response = response.replace('%%MANUFACTURER%%', rows[0].mfr); // Rows .mfr but the first index
+            response = response.replace('%%MFR_IMAGE%%', '/images/' + mfr + '_logo.png');
+            response = response.replace('%%MFR_ALT_TEXT%%', 'Logo of ' + rows[0].mfr);
+
+            let cereal_table = '';
+            let i;
+            for(i=0; i< rows.length; i++){
+                cereal_table = cereal_table + '<tr><td>' + rows[i].name + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].calories + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].carbohydrates + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].protein + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].fat + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].rating + '</td></tr>';
+            }
+            response = response.replace('%%CEREAL_INFO%%', cereal_table);
+        
+
+
+            res.status(200).type('html').send(response);            
+        });
+
+
+
     });
 });
-*/
 
+// Start server
 app.listen(port, () => {
     console.log('Now listening on port ' + port);
 });
