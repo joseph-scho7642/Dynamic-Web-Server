@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Weather Checking</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <div class="grid-container show-for-large">
+        <!-- `grid-x` represents a row -->
+        <div class="grid-x grid-padding-x">
+        </div>
+
+        <!-- Hello?! -->
+        <div class="grid-x grid-padding-x sticky">
+            <div class="cell small-6 large-4 border" style="background-color: #1a92c9;"><a href="services_template.html">Home</a></div>
+            <div class="cell small-6 large-4 border" style="background-color: #1a92c9;"><a href="likelihoods_template.html">Projects</a></div>
+            <div class="cell small-6 large-4 border" style="background-color: #1a92c9;"><a href="users_template.html">Resume</a></div>
+        </div>
+    </div>
+    
+    <div id="content">
+        <img id="manufacturer_img" src="%%MFR_IMAGE%%" alt="%%MFR_ALT_TEXT%%" />
+        <h1 id="manufacturer_name">%%MANUFACTURER%%</h1>
+        <div class="clear"></div>
+        <table>
+            <thead>
+                <tr>
+                    <th class="cereal_title">Cereal</th>
+                    <th>Calories</th>
+                    <th>Carbs</th>
+                    <th>Protein</th>
+                    <th>Fat</th>
+                    <th>Rating</th>
+                </tr>
+            </thead>
+            <tbody>
+                %%CEREAL_INFO%%
+            </tbody>
+        </table>
+</body>
+</html>
+
