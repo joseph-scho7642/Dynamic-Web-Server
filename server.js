@@ -28,6 +28,16 @@ let db = new sqlite3.Database(db_filename, sqlite3.OPEN_READONLY, (err) => {
 app.use(express.static(public_dir));
 
 
+// Trying out slider
+/*
+var rangeslider = document.getElementById("sliderRange");
+var output = document.getElementById("demo");
+output.innerHTML = rangeslider.value;
+
+rangeslider.oninput = function() {
+  output.innerHTML = this.value;
+}*/
+
 // GET request handler for home page '/' (redirect to desired route)
 app.get('/', (req, res) => {
     let home = '/cereal/services_template.html'; // <-- change this
@@ -57,6 +67,12 @@ app.get('/cereal/services_template.html', (req, res) => {
 
             let cereal_table = '';
             let i;
+            /*if(output.innerHTML < rows.length){
+                end = output.innerHTML
+            } else{
+                end = rows.length
+            }*/
+
             for(i=0; i< rows.length; i++){
                 cereal_table = cereal_table + '<tr><td>' + rows[i].name + '</td>';
                 cereal_table = cereal_table + '<td>' + rows[i].calories + '</td>';
