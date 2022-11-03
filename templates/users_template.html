@@ -4,6 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Weather Checking</title>
+    <link rel="stylesheet" href="/css/foundation.css"/>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -17,27 +18,34 @@
         </div>
     </div>
 
-    <div id="content">
-        <img id="manufacturer_img" src="%%MFR_IMAGE%%" alt="%%MFR_ALT_TEXT%%" />
-        <h1 id="manufacturer_name">%%MANUFACTURER%%</h1>
-        <div class="clear"></div>
-        <table>
-            <thead>
-                <tr>
-                    <th class="cereal_title">Cereal</th>
-                    <th>Calories</th>
-                    <th>Carbs</th>
-                    <th>Protein</th>
-                    <th>Fat</th>
-                    <th>Rating</th>
-                </tr>
-            </thead>
-            <tbody>
-                %%CEREAL_INFO%%
-            </tbody>
-        </table>
+    <!--
+    <div class="rangeslider">
+        <input type="range" min="1" max="100" value="10"
+            class="myslider" id="sliderRange">
     </div>
-
+    -->
+    <div class="grid-container show-for-large">
+        <div id="content">
+            <img id="manufacturer_img" src="%%MFR_IMAGE%%" alt="%%MFR_ALT_TEXT%%" />
+            <h1 id="manufacturer_name">%%MANUFACTURER%%</h1>
+            <div class="clear"></div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="cereal_title">Cereal</th>
+                        <th>Calories</th>
+                        <th>Carbs</th>
+                        <th>Protein</th>
+                        <th>Fat</th>
+                        <th>Rating</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    %%CEREAL_INFO%%
+                </tbody>
+            </table>
+        </div>
+    </div>
     <!-- include before closing </body> tag -->
     <script src="/js/vendor.js"></script>
     <script src="/js/foundation.js"></script>
