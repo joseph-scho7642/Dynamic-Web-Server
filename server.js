@@ -40,14 +40,14 @@ rangeslider.oninput = function() {
 
 // GET request handler for home page '/' (redirect to desired route)
 app.get('/', (req, res) => {
-    let home = '/cereal/services_template.html'; // <-- change this
+    let home = '/cereal/age.html'; // <-- change this
     res.redirect(home);
 });
 
 // GET request handler for cereal a from a specific manufacturer
-app.get('/cereal/services_template.html', (req, res) => {
+app.get('/cereal/age.html', (req, res) => {
     console.log(req.params.mfr);
-    fs.readFile(path.join(template_dir, 'services_template.html'), (err, template) => {
+    fs.readFile(path.join(template_dir, 'age.html'), (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
         let query = 'SELECT Manufacturers.name AS mfr, Cereals.name, Cereals.calories, Cereals.carbohydrates, \
@@ -94,9 +94,9 @@ app.get('/cereal/services_template.html', (req, res) => {
 });
 
 // GET request handler for cereal a from a specific manufacturer
-app.get('/cereal/likelihoods_template.html', (req, res) => {
+app.get('/cereal/income.html', (req, res) => {
     console.log(req.params.mfr);
-    fs.readFile(path.join(template_dir, 'likelihoods_template.html'), (err, template) => {
+    fs.readFile(path.join(template_dir, 'income.html'), (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
         let query = 'SELECT Manufacturers.name AS mfr, Cereals.name, Cereals.calories, Cereals.carbohydrates, \
@@ -137,9 +137,9 @@ app.get('/cereal/likelihoods_template.html', (req, res) => {
 });
 
 // GET request handler for cereal a from a specific manufacturer
-app.get('/cereal/users_template.html', (req, res) => {
+app.get('/cereal/services.html', (req, res) => {
     console.log(req.params.mfr);
-    fs.readFile(path.join(template_dir, 'users_template.html'), (err, template) => {
+    fs.readFile(path.join(template_dir, 'services.html'), (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
         let query = 'SELECT Manufacturers.name AS mfr, Cereals.name, Cereals.calories, Cereals.carbohydrates, \
@@ -178,6 +178,56 @@ app.get('/cereal/users_template.html', (req, res) => {
 
     });
 });
+
+
+
+
+// THIS IS A BEGINNER TEMPLATE
+
+/*
+// GET request handler for cereal a from a specific manufacturer
+app.get('/age/:year', (req, res) => {
+    console.log(req.params.mfr);
+    fs.readFile(path.join(template_dir, 'services.html'), (err, template) => {
+        // modify `template` and send response
+        // this will require a query to the SQL database
+        let query = 'SELECT Manufacturers.name AS mfr, Cereals.name, Cereals.calories, Cereals.carbohydrates, \
+                    Cereals.protein, Cereals.fat, Cereals.rating FROM Cereals INNER JOIN Manufacturers \
+                    ON Cereals.mfr = Manufacturers.id WHERE Cereals.mfr = ?'; // We use ? instead of req.params.mfr because then someone could inject hazardous code
+
+        let year = req.params.year;
+        db.all(query, [year], (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
+            console.log(err);
+            console.log(rows);
+
+            let response = template.toString();
+
+            response = response.replace('%%MANUFACTURER%%', rows[0].year); // Rows .mfr but the first index
+            response = response.replace('%%MFR_IMAGE%%', '/images/' + year + '_logo.png');
+            response = response.replace('%%MFR_ALT_TEXT%%', 'Logo of ' + rows[0].year);
+
+            let cereal_table = '';
+            let i;
+            for(i=0; i< rows.length; i++){
+                cereal_table = cereal_table + '<tr><td>' + rows[i].name + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].calories + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].carbohydrates + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].protein + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].fat + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].rating + '</td></tr>';
+            }
+            response = response.replace('%%CEREAL_INFO%%', cereal_table);
+        
+
+
+            res.status(200).type('html').send(response);            
+        });
+
+
+
+    });
+});
+*/
 
 // Start server
 app.listen(port, () => {
