@@ -9,7 +9,7 @@ let sqlite3 = require('sqlite3');
 
 let public_dir = path.join(__dirname, 'public');
 let template_dir = path.join(__dirname, 'templates');
-let db_filename = path.join(__dirname, 'cereal.sqlite3');
+let db_filename = path.join(__dirname, 'weather.sqlite3');
 
 let app = express();
 let port = 8000;
@@ -40,13 +40,13 @@ rangeslider.oninput = function() {
 
 // GET request handler for home page '/' (redirect to desired route)
 app.get('/', (req, res) => {
-    let home = '/cereal/age.html'; // <-- change this
+    let home = '/weatherbyage/0'; // <-- change this
     res.redirect(home);
 });
 
 // GET request handler for cereal a from a specific manufacturer
-app.get('/cereal/age.html', (req, res) => {
-    console.log(req.params.mfr);
+app.get('/weatherbyage/:age', (req, res) => {
+    console.log(req.params.age);
     fs.readFile(path.join(template_dir, 'age.html'), (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
@@ -54,8 +54,8 @@ app.get('/cereal/age.html', (req, res) => {
                     Cereals.protein, Cereals.fat, Cereals.rating FROM Cereals INNER JOIN Manufacturers \
                     ON Cereals.mfr = Manufacturers.id WHERE Cereals.mfr = ?'; // We use ? instead of req.params.mfr because then someone could inject hazardous code
 
-        let mfr = 'A';
-        db.all(query, [mfr], (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
+        let age = req.params.age;
+        db.all(query, age, (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
             console.log(err);
             console.log(rows);
 
@@ -94,8 +94,8 @@ app.get('/cereal/age.html', (req, res) => {
 });
 
 // GET request handler for cereal a from a specific manufacturer
-app.get('/cereal/income.html', (req, res) => {
-    console.log(req.params.mfr);
+app.get('/weatherbyincome/:income', (req, res) => {
+    console.log(req.params.income);
     fs.readFile(path.join(template_dir, 'income.html'), (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
@@ -103,8 +103,8 @@ app.get('/cereal/income.html', (req, res) => {
                     Cereals.protein, Cereals.fat, Cereals.rating FROM Cereals INNER JOIN Manufacturers \
                     ON Cereals.mfr = Manufacturers.id WHERE Cereals.mfr = ?'; // We use ? instead of req.params.mfr because then someone could inject hazardous code
 
-        let mfr = 'K';
-        db.all(query, [mfr], (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
+        let income = req.params.income;
+        db.all(query, income, (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
             console.log(err);
             console.log(rows);
 
@@ -137,8 +137,8 @@ app.get('/cereal/income.html', (req, res) => {
 });
 
 // GET request handler for cereal a from a specific manufacturer
-app.get('/cereal/services.html', (req, res) => {
-    console.log(req.params.mfr);
+app.get('/weatherbyservices/:services', (req, res) => {
+    console.log(req.params.services);
     fs.readFile(path.join(template_dir, 'services.html'), (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
@@ -146,8 +146,8 @@ app.get('/cereal/services.html', (req, res) => {
                     Cereals.protein, Cereals.fat, Cereals.rating FROM Cereals INNER JOIN Manufacturers \
                     ON Cereals.mfr = Manufacturers.id WHERE Cereals.mfr = ?'; // We use ? instead of req.params.mfr because then someone could inject hazardous code
 
-        let mfr = 'G';
-        db.all(query, [mfr], (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
+        let services = req.params.services.toUpperCase();
+        db.all(query, services, (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
             console.log(err);
             console.log(rows);
 
