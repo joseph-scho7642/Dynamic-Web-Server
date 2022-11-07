@@ -55,6 +55,11 @@ app.get('/weatherbyage/:age', (req, res) => {
                     Users.app_name, Users.use_smartwatch FROM Users INNER JOIN Likelihoods ON Users.use_smartwatch = Likelihoods.id, Users.age_range FROM Users INNER JOIN Ages ON Users.age_range = Ages.id, \
                     Users.gender, Users.income_range FROM Users INNER JOIN Income ON Users.income_range = Income.id, Users.us_region'
 
+        /* Currently a working query with {} in db.all
+        let query = 'SELECT Users.id, Users.daily_check, Users.weather_service, \
+                    Users.app_name, Users.use_smartwatch, Users.age_range, \
+                    Users.gender, Users.income_range, Users.us_region FROM Users';  */ 
+
         let age = req.params.age;
         db.all(query, age, (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
             console.log(err);
