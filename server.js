@@ -50,13 +50,13 @@ app.get('/weatherbyage/:age', (req, res) => {
     fs.readFile(path.join(template_dir, 'age_template.html'), (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
-        let query = 'SELECT * FROM Users'
-        /*let query = 'SELECT Manufacturers.name AS mfr, Cereals.name, Cereals.calories, Cereals.carbohydrates, \
-                    Cereals.protein, Cereals.fat, Cereals.rating FROM Cereals INNER JOIN Manufacturers \
-                    ON Cereals.mfr = Manufacturers.id WHERE Cereals.mfr = ?'; // We use ? instead of req.params.mfr because then someone could inject hazardous code*/
+        //let query = 'SELECT * FROM Users'
+        let query = 'SELECT Users.age_range AS age, Users.id, Users.daily_check, Users.weather_service FROM Users INNER JOIN Services ON Users.weather_service = Services.id, \
+                    Users.app_name, Users.use_smartwatch FROM Users INNER JOIN Likelihoods ON Users.use_smartwatch = Likelihoods.id, Users.age_range FROM Users INNER JOIN Ages ON Users.age_range = Ages.id, \
+                    Users.gender, Users.income_range FROM Users INNER JOIN Income ON Users.income_range = Income.id, Users.us_region'
 
         let age = req.params.age;
-        db.all(query, {}, (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
+        db.all(query, age, (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
             console.log(err);
             console.log(rows);
 
@@ -68,16 +68,15 @@ app.get('/weatherbyage/:age', (req, res) => {
 
             let cereal_table = '';
             let i;
-            /*if(output.innerHTML < rows.length){
-                end = output.innerHTML
-            } else{
-                end = rows.length
-            }*/
+ 
 
             for(i=0; i< rows.length; i++){
-                cereal_table = cereal_table + '<tr><td>' + rows[i].daily_check + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].age_range + '</td>';
+                cereal_table = cereal_table + '<tr><td>' + rows[i].id + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].daily_check + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].weather_service + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].app_name + '</td>';                
                 cereal_table = cereal_table + '<td>' + rows[i].use_smartwatch + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].age_range + '</td>';
                 cereal_table = cereal_table + '<td>' + rows[i].gender + '</td>';
                 cereal_table = cereal_table + '<td>' + rows[i].income_range + '</td>';
                 cereal_table = cereal_table + '<td>' + rows[i].us_region + '</td></tr>';
