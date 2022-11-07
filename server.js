@@ -47,23 +47,24 @@ app.get('/', (req, res) => {
 // GET request handler for cereal a from a specific manufacturer
 app.get('/weatherbyage/:age', (req, res) => {
     console.log(req.params.age);
-    fs.readFile(path.join(template_dir, 'age.html'), (err, template) => {
+    fs.readFile(path.join(template_dir, 'age_template.html'), (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
-        let query = 'SELECT Manufacturers.name AS mfr, Cereals.name, Cereals.calories, Cereals.carbohydrates, \
+        let query = 'SELECT * FROM Users'
+        /*let query = 'SELECT Manufacturers.name AS mfr, Cereals.name, Cereals.calories, Cereals.carbohydrates, \
                     Cereals.protein, Cereals.fat, Cereals.rating FROM Cereals INNER JOIN Manufacturers \
-                    ON Cereals.mfr = Manufacturers.id WHERE Cereals.mfr = ?'; // We use ? instead of req.params.mfr because then someone could inject hazardous code
+                    ON Cereals.mfr = Manufacturers.id WHERE Cereals.mfr = ?'; // We use ? instead of req.params.mfr because then someone could inject hazardous code*/
 
         let age = req.params.age;
-        db.all(query, age, (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
+        db.all(query, {}, (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
             console.log(err);
             console.log(rows);
 
             let response = template.toString();
 
-            response = response.replace('%%MANUFACTURER%%', rows[0].mfr); // Rows .mfr but the first index
-            response = response.replace('%%MFR_IMAGE%%', '/images/' + mfr + '_logo.png');
-            response = response.replace('%%MFR_ALT_TEXT%%', 'Logo of ' + rows[0].mfr);
+            //response = response.replace('%%MANUFACTURER%%', rows[0].age); // Rows .mfr but the first index
+            //response = response.replace('%%MFR_IMAGE%%', '/images/' + age + '_logo.png');
+            //response = response.replace('%%MFR_ALT_TEXT%%', 'Logo of ' + rows[0].age);
 
             let cereal_table = '';
             let i;
@@ -74,14 +75,14 @@ app.get('/weatherbyage/:age', (req, res) => {
             }*/
 
             for(i=0; i< rows.length; i++){
-                cereal_table = cereal_table + '<tr><td>' + rows[i].name + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].calories + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].carbohydrates + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].protein + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].fat + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].rating + '</td></tr>';
+                cereal_table = cereal_table + '<tr><td>' + rows[i].daily_check + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].age_range + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].use_smartwatch + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].gender + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].income_range + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].us_region + '</td></tr>';
             }
-            response = response.replace('%%CEREAL_INFO%%', cereal_table);
+            response = response.replace('%%WEATHER_INFO%%', cereal_table);
         
 
 
