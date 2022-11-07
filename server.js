@@ -9,7 +9,7 @@ let sqlite3 = require('sqlite3');
 
 let public_dir = path.join(__dirname, 'public');
 let template_dir = path.join(__dirname, 'templates');
-let db_filename = path.join(__dirname, 'weather.sqlite3');
+let db_filename = path.join(__dirname, 'db', 'weather_checking.sqlite3');
 
 let app = express();
 let port = 8000;

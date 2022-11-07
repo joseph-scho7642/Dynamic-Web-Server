@@ -1,1 +1,64 @@
 <!-- We can build something in here -->
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Weather Checking</title>
+    <link rel="stylesheet" href="/css/foundation.css"/>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <div class="grid-container show-for-large">
+        <!-- `grid-x` represents a row -->
+        <div class="grid-x grid-padding-x">
+            <div class="cell small-4 large-4" style="background-color: #1a92c9;"><a href="age.html">Age</a></div>
+            <div class="cell small-4 large-4" style="background-color: #1a92c9;"><a href="income.html">Income</a></div>
+            <div class="cell small-4 large-4" style="background-color: #1a92c9;"><a href="services.html">Services</a></div>
+        </div>
+    </div>
+
+    <!--
+    <div class="rangeslider">
+        <input type="range" min="1" max="100" value="10"
+            class="myslider" id="sliderRange">
+    </div>
+    -->
+    <div class="grid-container">
+        <div id="content">
+            <!--<img id="manufacturer_img" src="%%MFR_IMAGE%%" alt="%%MFR_ALT_TEXT%%" />-->
+            <h1 id="age_name">%%AGE%%</h1>
+            <div class="clear"></div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="cereal_title">Sort by Age</th>
+                        <th>RespondentID</th>
+                        <th>Do you check the daily weather report?</th>
+                        <th>How do you typically check the weather?</th>
+                        <th>A specific website or app?</th>
+                        <th>If you had a smartwatch, how likely would you be to check the weather with it?</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                        <th>Household income</th>
+                        <th>US Region</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    %%WEATHER_INFO%%
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- include before closing </body> tag -->
+    <script src="/js/vendor.js"></script>
+    <script src="/js/foundation.js"></script>
+    <script type="application/javascript">
+        $(document).foundation();
+    </script>
+</body>
+</html>
+
+
