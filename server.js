@@ -80,7 +80,11 @@ app.get('/weatherbyage/:age', (req, res) => {
             for(i=0; i< rows.length; i++){
                 cereal_table = cereal_table + '<tr><td>' + rows[i].age + '</td>';
                 cereal_table = cereal_table + '<td>' + rows[i].app_name + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].income + '</td></tr>';
+                cereal_table = cereal_table + '<td>' + rows[i].gender + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].income + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].us_region + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].Smartwatch_Likelihood + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].service + '</td></tr>';
             }
             response = response.replace('%%WEATHER_INFO%%', cereal_table);
         
