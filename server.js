@@ -73,7 +73,7 @@ app.get('/weatherbyage/:age', (req, res) => {
             //response = response.replace('%%MFR_IMAGE%%', '/images/' + age + '_logo.png');
             //response = response.replace('%%MFR_ALT_TEXT%%', 'Logo of ' + rows[0].age);
 
-            response = response.replace('%%AGE&&', 'Age Range= ' + rows[0].age);
+            response = response.replace('%%AGE%%', 'Age Range= ' + rows[0].age);
 
             let cereal_table = '';
             let i;
