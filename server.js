@@ -88,9 +88,8 @@ app.get('/weatherbyage/:age', (req, res) => {
 
             let response = template.toString();
 
-            //response = response.replace('%%MANUFACTURER%%', rows[0].age); // Rows .mfr but the first index
-            //response = response.replace('%%MFR_IMAGE%%', '/images/' + age + '_logo.png');
-            //response = response.replace('%%MFR_ALT_TEXT%%', 'Logo of ' + rows[0].age);
+            response = response.replace('%%AGE_IMAGE%%', '/images/' + age + '_age.jpg');
+            response = response.replace('%%AGE_ALT_TEXT%%', 'Picture of ' + rows[0].age);
 
             response = response.replace('%%AGE%%', 'Age Range: ' + rows[0].age);
 
@@ -190,6 +189,9 @@ app.get('/weatherbyservices/:services', (req, res) => {
             console.log(rows);
 
             let response = template.toString();
+
+            response = response.replace('%%SERVICES_IMAGE%%', '/images/' + services + '_services.jpg');
+            response = response.replace('%%SERVICES_ALT_TEXT%%', 'Picture of ' + rows[0].service);
 
             response = response.replace('%%SERVICE%%', 'Service: ' + rows[0].service);
 
