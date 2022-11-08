@@ -63,6 +63,30 @@ app.get('/weatherbyage/:age', (req, res) => {
                     Users.gender, Users.income_range, Users.us_region FROM Users';  */ 
 
         let age = req.params.age;
+        let q = 'SELECT id FROM Ages';
+        let prev;
+        let next;
+        db.all(q, [], (err, rows) => {
+            //console.log(err);
+            //console.log(rows);
+            let i;
+            for (i=0; i<rows.length; i++){
+                if(rows[i].id === age){
+                    if(i===0){
+                        prev = rows[rows.length-1].age;
+                        next = rows[i+1].id;
+                    }
+                    else if(i === rows.length-1){
+                        prev = rows[i-1].age;
+                        next = rows[0].id;
+                    }
+                    else{
+                        prev = rows[i-1].age;
+                        next = rows[i+1].age;
+                    }
+                }
+            }
+        });
         db.all(query, age, (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
             console.log(err);
             console.log(rows);
@@ -90,7 +114,8 @@ app.get('/weatherbyage/:age', (req, res) => {
             response = response.replace('%%WEATHER_INFO%%', cereal_table);
         
 
-
+            response = response.replace('%%NEXT_PAGE%%', next);
+            response = response.replace('%%PREV_PAGE%%', prev);
             res.status(200).type('html').send(response);            
         });
 
