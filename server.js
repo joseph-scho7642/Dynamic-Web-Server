@@ -141,9 +141,9 @@ app.get('/weatherbyincome/:income', (req, res) => {
 
             let response = template.toString();
 
-            /*response = response.replace('%%MANUFACTURER%%', rows[0].mfr); // Rows .mfr but the first index
-            response = response.replace('%%MFR_IMAGE%%', '/images/' + mfr + '_logo.png');
-            response = response.replace('%%MFR_ALT_TEXT%%', 'Logo of ' + rows[0].mfr);*/
+            
+            response = response.replace('%%INCOME_IMAGE%%', '/images/' + income + '_income.jpg');
+            response = response.replace('%%INCOME_ALT_TEXT%%', 'Picture of ' + rows[0].income);
 
             response = response.replace('%%INCOME_RANGE%%', 'Income Range: ' + rows[0].income);
 
