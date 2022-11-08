@@ -51,9 +51,11 @@ app.get('/weatherbyage/:age', (req, res) => {
         // modify `template` and send response
         // this will require a query to the SQL database
         //let query = 'SELECT * FROM Users'
-        let query = 'SELECT Users.age_range AS age, Users.id, Users.daily_check, Users.weather_service FROM Users INNER JOIN Services ON Users.weather_service = Services.id, \
-                    Users.app_name, Users.use_smartwatch FROM Users INNER JOIN Likelihoods ON Users.use_smartwatch = Likelihoods.id, Users.age_range FROM Users INNER JOIN Ages ON Users.age_range = Ages.id, \
-                    Users.gender, Users.income_range FROM Users INNER JOIN Income ON Users.income_range = Income.id, Users.us_region'
+        let query = 'SELECT Ages.age_range AS age, Users.app_name, Users.daily_check, \
+        Users.gender, Income.income, Users.us_region, Likelihoods.likelihood AS Smartwatch_Likelihood, \
+        Services.service AS service FROM Users INNER JOIN Ages ON Users.age_range = Ages.id INNER JOIN \
+        Services ON Users.weather_service = Services.id INNER JOIN Income ON Users.income_range = Income.id \
+        INNER JOIN Likelihoods ON Users.use_smartwatch = Likelihoods.id WHERE Users.age_range = ?;'
 
         /* Currently a working query with {} in db.all
         let query = 'SELECT Users.id, Users.daily_check, Users.weather_service, \
@@ -76,15 +78,9 @@ app.get('/weatherbyage/:age', (req, res) => {
  
 
             for(i=0; i< rows.length; i++){
-                cereal_table = cereal_table + '<tr><td>' + rows[i].id + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].daily_check + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].weather_service + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].app_name + '</td>';                
-                cereal_table = cereal_table + '<td>' + rows[i].use_smartwatch + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].age_range + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].gender + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].income_range + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].us_region + '</td></tr>';
+                cereal_table = cereal_table + '<tr><td>' + rows[i].age + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].app_name + '</td>';
+                cereal_table = cereal_table + '<td>' + rows[i].income + '</td></tr>';
             }
             response = response.replace('%%WEATHER_INFO%%', cereal_table);
         
