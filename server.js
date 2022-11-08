@@ -73,13 +73,14 @@ app.get('/weatherbyage/:age', (req, res) => {
             //response = response.replace('%%MFR_IMAGE%%', '/images/' + age + '_logo.png');
             //response = response.replace('%%MFR_ALT_TEXT%%', 'Logo of ' + rows[0].age);
 
+            response = response.replace('%%AGE&&', 'Age Range= ' + rows[0].age);
+
             let cereal_table = '';
             let i;
  
 
             for(i=0; i< rows.length; i++){
-                cereal_table = cereal_table + '<tr><td>' + rows[i].age + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].app_name + '</td>';
+                cereal_table = cereal_table + '<tr><td>' + rows[i].app_name + '</td>';
                 cereal_table = cereal_table + '<td>' + rows[i].gender + '</td>';
                 cereal_table = cereal_table + '<td>' + rows[i].income + '</td>';
                 cereal_table = cereal_table + '<td>' + rows[i].us_region + '</td>';
