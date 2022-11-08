@@ -52,15 +52,10 @@ app.get('/weatherbyage/:age', (req, res) => {
         // this will require a query to the SQL database
         //let query = 'SELECT * FROM Users'
         let query = 'SELECT Ages.age_range AS age, Users.app_name, Users.daily_check, \
-        Users.gender, Income.income, Users.us_region, Likelihoods.likelihood AS Smartwatch_Likelihood, \
+        Users.gender, Users.weather_service, Ages.age_range, Income.income, Users.us_region, Likelihoods.likelihood AS Smartwatch_Likelihood, \
         Services.service AS service FROM Users INNER JOIN Ages ON Users.age_range = Ages.id INNER JOIN \
         Services ON Users.weather_service = Services.id INNER JOIN Income ON Users.income_range = Income.id \
         INNER JOIN Likelihoods ON Users.use_smartwatch = Likelihoods.id WHERE Users.age_range = ?;'
-
-        /* Currently a working query with {} in db.all
-        let query = 'SELECT Users.id, Users.daily_check, Users.weather_service, \
-                    Users.app_name, Users.use_smartwatch, Users.age_range, \
-                    Users.gender, Users.income_range, Users.us_region FROM Users';  */ 
 
         let age = req.params.age;
         let q = 'SELECT id FROM Ages';
@@ -97,21 +92,22 @@ app.get('/weatherbyage/:age', (req, res) => {
             //response = response.replace('%%MFR_IMAGE%%', '/images/' + age + '_logo.png');
             //response = response.replace('%%MFR_ALT_TEXT%%', 'Logo of ' + rows[0].age);
 
-            response = response.replace('%%AGE%%', 'Age Range= ' + rows[0].age);
+            response = response.replace('%%AGE%%', 'Age Range: ' + rows[0].age);
 
-            let cereal_table = '';
+            let age_table = '';
             let i;
  
 
             for(i=0; i< rows.length; i++){
-                cereal_table = cereal_table + '<tr><td>' + rows[i].app_name + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].gender + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].income + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].us_region + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].Smartwatch_Likelihood + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].service + '</td></tr>';
+                age_table = age_table + '<tr><td>' + rows[i].service + '</td>';
+                age_table = age_table + '<td>' + rows[i].app_name + '</td>';
+                age_table = age_table + '<td>' + rows[i].Smartwatch_Likelihood + '</td>';
+                age_table = age_table + '<td>' + rows[i].age_range + '</td>';
+                age_table = age_table + '<td>' + rows[i].gender + '</td>';
+                age_table = age_table + '<td>' + rows[i].income + '</td>';
+                age_table = age_table + '<td>' + rows[i].us_region + '</td>';
             }
-            response = response.replace('%%WEATHER_INFO%%', cereal_table);
+            response = response.replace('%%WEATHER_INFO%%', age_table);
         
 
             response = response.replace('%%NEXT_PAGE%%', next);
@@ -130,9 +126,13 @@ app.get('/weatherbyincome/:income', (req, res) => {
     fs.readFile(path.join(template_dir, 'income.html'), (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
-        let query = 'SELECT Manufacturers.name AS mfr, Cereals.name, Cereals.calories, Cereals.carbohydrates, \
-                    Cereals.protein, Cereals.fat, Cereals.rating FROM Cereals INNER JOIN Manufacturers \
-                    ON Cereals.mfr = Manufacturers.id WHERE Cereals.mfr = ?'; // We use ? instead of req.params.mfr because then someone could inject hazardous code
+
+        let query = 'SELECT Income.income AS income, Users.app_name, Users.daily_check, \
+        Users.gender, Users.weather_service, Ages.age_range, Income.income, Users.us_region, Likelihoods.likelihood AS Smartwatch_Likelihood, \
+        Services.service AS service FROM Users INNER JOIN Ages ON Users.age_range = Ages.id INNER JOIN \
+        Services ON Users.weather_service = Services.id INNER JOIN Income ON Users.income_range = Income.id \
+        INNER JOIN Likelihoods ON Users.use_smartwatch = Likelihoods.id WHERE Users.income_range = ?;'
+
 
         let income = req.params.income;
         db.all(query, income, (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
@@ -141,21 +141,24 @@ app.get('/weatherbyincome/:income', (req, res) => {
 
             let response = template.toString();
 
-            response = response.replace('%%MANUFACTURER%%', rows[0].mfr); // Rows .mfr but the first index
+            /*response = response.replace('%%MANUFACTURER%%', rows[0].mfr); // Rows .mfr but the first index
             response = response.replace('%%MFR_IMAGE%%', '/images/' + mfr + '_logo.png');
-            response = response.replace('%%MFR_ALT_TEXT%%', 'Logo of ' + rows[0].mfr);
+            response = response.replace('%%MFR_ALT_TEXT%%', 'Logo of ' + rows[0].mfr);*/
 
-            let cereal_table = '';
+            response = response.replace('%%INCOME_RANGE%%', 'Income Range: ' + rows[0].income);
+
+            let income_table = '';
             let i;
             for(i=0; i< rows.length; i++){
-                cereal_table = cereal_table + '<tr><td>' + rows[i].name + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].calories + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].carbohydrates + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].protein + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].fat + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].rating + '</td></tr>';
+                income_table = income_table + '<tr><td>' + rows[i].service + '</td>';
+                income_table = income_table + '<td>' + rows[i].app_name + '</td>';
+                income_table = income_table + '<td>' + rows[i].Smartwatch_Likelihood + '</td>';
+                income_table = income_table + '<td>' + rows[i].age_range + '</td>';
+                income_table = income_table + '<td>' + rows[i].gender + '</td>';
+                income_table = income_table + '<td>' + rows[i].income + '</td>';
+                income_table = income_table + '<td>' + rows[i].us_region + '</td>';
             }
-            response = response.replace('%%CEREAL_INFO%%', cereal_table);
+            response = response.replace('%%WEATHER_INFO%%', income_table);
         
 
 
@@ -173,9 +176,13 @@ app.get('/weatherbyservices/:services', (req, res) => {
     fs.readFile(path.join(template_dir, 'services.html'), (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
-        let query = 'SELECT Manufacturers.name AS mfr, Cereals.name, Cereals.calories, Cereals.carbohydrates, \
-                    Cereals.protein, Cereals.fat, Cereals.rating FROM Cereals INNER JOIN Manufacturers \
-                    ON Cereals.mfr = Manufacturers.id WHERE Cereals.mfr = ?'; // We use ? instead of req.params.mfr because then someone could inject hazardous code
+
+        let query = 'SELECT Services.service AS age, Users.app_name, Users.daily_check, \
+        Users.gender, Users.weather_service, Ages.age_range, Income.income, Users.us_region, Likelihoods.likelihood AS Smartwatch_Likelihood, \
+        Services.service AS service FROM Users INNER JOIN Ages ON Users.age_range = Ages.id INNER JOIN \
+        Services ON Users.weather_service = Services.id INNER JOIN Income ON Users.income_range = Income.id \
+        INNER JOIN Likelihoods ON Users.use_smartwatch = Likelihoods.id WHERE Users.weather_service = ?;'
+
 
         let services = req.params.services.toUpperCase();
         db.all(query, services, (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
@@ -184,21 +191,20 @@ app.get('/weatherbyservices/:services', (req, res) => {
 
             let response = template.toString();
 
-            response = response.replace('%%MANUFACTURER%%', rows[0].mfr); // Rows .mfr but the first index
-            response = response.replace('%%MFR_IMAGE%%', '/images/' + mfr + '_logo.png');
-            response = response.replace('%%MFR_ALT_TEXT%%', 'Logo of ' + rows[0].mfr);
+            response = response.replace('%%SERVICE%%', 'Service: ' + rows[0].service);
 
-            let cereal_table = '';
+            let services_table = '';
             let i;
             for(i=0; i< rows.length; i++){
-                cereal_table = cereal_table + '<tr><td>' + rows[i].name + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].calories + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].carbohydrates + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].protein + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].fat + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].rating + '</td></tr>';
+                services_table = services_table + '<tr><td>' + rows[i].service + '</td>';
+                services_table = services_table + '<td>' + rows[i].app_name + '</td>';
+                services_table = services_table + '<td>' + rows[i].Smartwatch_Likelihood + '</td>';
+                services_table = services_table + '<td>' + rows[i].age_range + '</td>';
+                services_table = services_table + '<td>' + rows[i].gender + '</td>';
+                services_table = services_table + '<td>' + rows[i].income + '</td>';
+                services_table = services_table + '<td>' + rows[i].us_region + '</td>';
             }
-            response = response.replace('%%CEREAL_INFO%%', cereal_table);
+            response = response.replace('%%WEATHER_INFO%%', services_table);
         
 
 
@@ -209,56 +215,6 @@ app.get('/weatherbyservices/:services', (req, res) => {
 
     });
 });
-
-
-
-
-// THIS IS A BEGINNER TEMPLATE
-
-/*
-// GET request handler for cereal a from a specific manufacturer
-app.get('/age/:year', (req, res) => {
-    console.log(req.params.mfr);
-    fs.readFile(path.join(template_dir, 'services.html'), (err, template) => {
-        // modify `template` and send response
-        // this will require a query to the SQL database
-        let query = 'SELECT Manufacturers.name AS mfr, Cereals.name, Cereals.calories, Cereals.carbohydrates, \
-                    Cereals.protein, Cereals.fat, Cereals.rating FROM Cereals INNER JOIN Manufacturers \
-                    ON Cereals.mfr = Manufacturers.id WHERE Cereals.mfr = ?'; // We use ? instead of req.params.mfr because then someone could inject hazardous code
-
-        let year = req.params.year;
-        db.all(query, [year], (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
-            console.log(err);
-            console.log(rows);
-
-            let response = template.toString();
-
-            response = response.replace('%%MANUFACTURER%%', rows[0].year); // Rows .mfr but the first index
-            response = response.replace('%%MFR_IMAGE%%', '/images/' + year + '_logo.png');
-            response = response.replace('%%MFR_ALT_TEXT%%', 'Logo of ' + rows[0].year);
-
-            let cereal_table = '';
-            let i;
-            for(i=0; i< rows.length; i++){
-                cereal_table = cereal_table + '<tr><td>' + rows[i].name + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].calories + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].carbohydrates + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].protein + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].fat + '</td>';
-                cereal_table = cereal_table + '<td>' + rows[i].rating + '</td></tr>';
-            }
-            response = response.replace('%%CEREAL_INFO%%', cereal_table);
-        
-
-
-            res.status(200).type('html').send(response);            
-        });
-
-
-
-    });
-});
-*/
 
 // Start server
 app.listen(port, () => {
