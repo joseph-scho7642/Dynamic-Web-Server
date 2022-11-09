@@ -85,10 +85,10 @@ app.get('/weatherbyage/:age', (req, res) => {
             //console.log(rows);
 
 
-            /*if(age != 0 || age != 1 || age != 2 || age != 3){
-                res.json({error: "Not found"});
-                return
-            }*/
+            if(age != 0 && age != 1 && age != 2 && age != 3){
+                res.json({error: "No age range under the id of " + age + " found on this website"});
+                return;
+            }
             
             let response = template.toString();
 
@@ -142,7 +142,12 @@ app.get('/weatherbyincome/:income', (req, res) => {
         let income = req.params.income;
         db.all(query, income, (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
             console.log(err);
-            console.log(rows);
+            //console.log(rows);
+
+            if(income != 0 && income != 0 && income != 1 && income != 2 && income != 3 && income != 4 && income != 5 && income != 6 && income != 7 && income != 8 && income != 9 && income != 10){
+                res.json({error: "No income range under the id of " + income + " found on this website"});
+                return;
+            }
 
             let response = template.toString();
 
@@ -192,7 +197,12 @@ app.get('/weatherbyservices/:services', (req, res) => {
         let services = req.params.services.toUpperCase();
         db.all(query, services, (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
             console.log(err);
-            console.log(rows);
+            //console.log(rows);
+
+            if(services != 'D' && services != 'A' && services != 'W' && services != 'L' && services != 'I' && services != 'N' && services != 'R' && services != 'E'){
+                res.json({error: "No service under the id of " + services + " found on this website"});
+                return;
+            }
 
             let response = template.toString();
 

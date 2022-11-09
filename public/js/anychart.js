@@ -1,6 +1,5 @@
 
 
-
 function draw() {
     // create data
     var data = [
