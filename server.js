@@ -44,6 +44,7 @@ app.get('/weatherbyage/:age', (req, res) => {
         //let query = 'SELECT * FROM Users'
 
         let age = req.params.age;
+
         let q = 'SELECT id FROM Ages';
         let prev;
         let next;
@@ -80,16 +81,21 @@ app.get('/weatherbyage/:age', (req, res) => {
         Services ON Users.weather_service = Services.id INNER JOIN Income ON Users.income_range = Income.id \
         INNER JOIN Likelihoods ON Users.use_smartwatch = Likelihoods.id WHERE Users.age_range = ?;'
         db.all(query, age, (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
-            //console.log(err);
+            console.log(err);
             //console.log(rows);
 
+
+            /*if(age != 0 || age != 1 || age != 2 || age != 3){
+                res.json({error: "Not found"});
+                return
+            }*/
+            
             let response = template.toString();
 
             let anychart = require('./public/js/anychart');
             console.log(anychart);
             //let response_chart = toString(anychart.draw); // 'Calling the draw of anydraw
 
-            
 
             response = response.replace('%%AGE_IMAGE%%', '/images/' + age + '_age.jpg');
             response = response.replace('%%AGE_ALT_TEXT%%', 'Picture of ' + rows[0].age);
