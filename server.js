@@ -28,15 +28,6 @@ let db = new sqlite3.Database(db_filename, sqlite3.OPEN_READONLY, (err) => {
 app.use(express.static(public_dir));
 
 
-// Trying out slider
-/*
-var rangeslider = document.getElementById("sliderRange");
-var output = document.getElementById("demo");
-output.innerHTML = rangeslider.value;
-
-rangeslider.oninput = function() {
-  output.innerHTML = this.value;
-}*/
 
 // GET request handler for home page '/' (redirect to desired route)
 app.get('/', (req, res) => {
@@ -64,6 +55,9 @@ app.get('/weatherbyage/:age', (req, res) => {
         db.all(q, [], (err, rows) => {
             //console.log(err);
             //console.log(rows);
+            
+
+
             let i;
             for (i=0; i<rows.length; i++){
                 if(rows[i].id === age){
@@ -83,10 +77,16 @@ app.get('/weatherbyage/:age', (req, res) => {
             }
         });
         db.all(query, age, (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
-            console.log(err);
-            console.log(rows);
+            //console.log(err);
+            //console.log(rows);
 
             let response = template.toString();
+
+            let anychart = require('./public/js/anychart');
+            console.log(anychart);
+            let response_chart = toString(anychart.draw); // 'Calling the draw of anydraw
+
+            
 
             response = response.replace('%%AGE_IMAGE%%', '/images/' + age + '_age.jpg');
             response = response.replace('%%AGE_ALT_TEXT%%', 'Picture of ' + rows[0].age);
