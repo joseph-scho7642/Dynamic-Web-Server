@@ -51,11 +51,6 @@ app.get('/weatherbyage/:age', (req, res) => {
         // modify `template` and send response
         // this will require a query to the SQL database
         //let query = 'SELECT * FROM Users'
-        let query = 'SELECT Ages.age_range AS age, Users.app_name, Users.daily_check, \
-        Users.gender, Users.weather_service, Ages.age_range, Income.income, Users.us_region, Likelihoods.likelihood AS Smartwatch_Likelihood, \
-        Services.service AS service FROM Users INNER JOIN Ages ON Users.age_range = Ages.id INNER JOIN \
-        Services ON Users.weather_service = Services.id INNER JOIN Income ON Users.income_range = Income.id \
-        INNER JOIN Likelihoods ON Users.use_smartwatch = Likelihoods.id WHERE Users.age_range = ?;'
 
         let age = req.params.age;
         let q = 'SELECT id FROM Ages';
@@ -66,22 +61,30 @@ app.get('/weatherbyage/:age', (req, res) => {
             //console.log(rows);
             let i;
             for (i=0; i<rows.length; i++){
-                if(rows[i].id === age){
-                    if(i===0){
-                        prev = rows[rows.length-1].age;
+                console.log('id: ' + rows[i].id + ' AGE: ' + age);
+                if(rows[i].id == age){
+                    if(i==0){
+                        prev = rows[rows.length-1].id;
                         next = rows[i+1].id;
                     }
-                    else if(i === rows.length-1){
-                        prev = rows[i-1].age;
+                    else if(i == rows.length-1){
+                        prev = rows[i-1].id;
                         next = rows[0].id;
                     }
                     else{
-                        prev = rows[i-1].age;
-                        next = rows[i+1].age;
+                        prev = rows[i-1].id;
+                        next = rows[i+1].id;
                     }
                 }
             }
+            console.log('PREV: ' + prev);
         });
+
+        let query = 'SELECT Ages.age_range AS age, Users.app_name, Users.daily_check, \
+        Users.gender, Users.weather_service, Ages.age_range, Income.income, Users.us_region, Likelihoods.likelihood AS Smartwatch_Likelihood, \
+        Services.service AS service FROM Users INNER JOIN Ages ON Users.age_range = Ages.id INNER JOIN \
+        Services ON Users.weather_service = Services.id INNER JOIN Income ON Users.income_range = Income.id \
+        INNER JOIN Likelihoods ON Users.use_smartwatch = Likelihoods.id WHERE Users.age_range = ?;'
         db.all(query, age, (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
             console.log(err);
             console.log(rows);
@@ -113,9 +116,6 @@ app.get('/weatherbyage/:age', (req, res) => {
             response = response.replace('%%PREV_PAGE%%', prev);
             res.status(200).type('html').send(response);            
         });
-
-
-
     });
 });
 
