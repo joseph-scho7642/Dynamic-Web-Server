@@ -87,7 +87,7 @@ app.get('/weatherbyage/:age', (req, res) => {
 
             let anychart = require('./public/js/anychart');
             console.log(anychart);
-            let response_chart = toString(anychart.draw); // 'Calling the draw of anydraw
+            //let response_chart = toString(anychart.draw); // 'Calling the draw of anydraw
 
             
 
