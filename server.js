@@ -272,7 +272,7 @@ app.get('/weatherbyservices/:services', (req, res) => {
             let i;
             for (i=0; i<rows.length; i++){
                 console.log('id: ' + rows[i].id + ' AGE: ' + services);
-                if(rows[i].id == income){
+                if(rows[i].id == services){
                     if(i==0){
                         prev = rows[rows.length-1].id;
                         next = rows[i+1].id;
