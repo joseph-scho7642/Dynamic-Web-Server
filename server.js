@@ -231,7 +231,8 @@ app.get('/weatherbyincome/:income', (req, res) => {
             response = response.replace('%%WEATHER_INFO%%', income_table);
         
 
-
+            response = response.replace('%%NEXT_PAGE%%', next);
+            response = response.replace('%%PREV_PAGE%%', prev);
             res.status(200).type('html').send(response);            
         });
 
