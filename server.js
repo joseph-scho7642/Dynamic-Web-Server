@@ -265,6 +265,30 @@ app.get('/weatherbyservices/:services', (req, res) => {
 
 
         let services = req.params.services.toUpperCase();
+        let q = 'SELECT id FROM Services';
+        let prev;
+        let next;
+        db.all(q, [], (err, rows) => {
+            let i;
+            for (i=0; i<rows.length; i++){
+                console.log('id: ' + rows[i].id + ' AGE: ' + services);
+                if(rows[i].id == income){
+                    if(i==0){
+                        prev = rows[rows.length-1].id;
+                        next = rows[i+1].id;
+                    }
+                    else if(i == rows.length-1){
+                        prev = rows[i-1].id;
+                        next = rows[0].id;
+                    }
+                    else{
+                        prev = rows[i-1].id;
+                        next = rows[i+1].id;
+                    }
+                }
+            }
+            console.log('PREV: ' + prev);
+        });
         db.all(query, services, (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
             console.log(err);
             //console.log(rows);
@@ -295,7 +319,9 @@ app.get('/weatherbyservices/:services', (req, res) => {
             response = response.replace('%%WEATHER_INFO%%', services_table);
         
 
-
+            console.log('PREV: ' + prev);
+            response = response.replace('%%NEXT_PAGE%%', next);
+            response = response.replace('%%PREV_PAGE%%', prev);
             res.status(200).type('html').send(response);            
         });
 
