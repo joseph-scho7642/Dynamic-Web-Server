@@ -35,7 +35,10 @@ app.get('/', (req, res) => {
     res.redirect(home);
 });
 
-// GET request handler for cereal a from a specific manufacturer
+
+
+
+// GET request handler for cereal a from a specific age ranges
 app.get('/weatherbyage/:age', (req, res) => {
     console.log(req.params.age);
     fs.readFile(path.join(template_dir, 'age_template.html'), (err, template) => {
@@ -45,9 +48,11 @@ app.get('/weatherbyage/:age', (req, res) => {
 
         let age = req.params.age;
 
+        // Previous and next buttons!
         let q = 'SELECT id FROM Ages';
         let prev;
         let next;
+        var one_finished = false;
         db.all(q, [], (err, rows) => {
             let i;
             for (i=0; i<rows.length; i++){
@@ -68,7 +73,19 @@ app.get('/weatherbyage/:age', (req, res) => {
                 }
             }
             console.log('PREV: ' + prev);
+
+            //If this function finished first, return
+            if(one_finished == true){
+                console.log('PREV: ' + prev);
+                response = response.replace('%%NEXT_PAGE%%', next);
+                response = response.replace('%%PREV_PAGE%%', prev);
+                res.status(200).type('html').send(response);  
+            }     
+
+            one_finished = true;     
         });
+
+        // Query for SQL table
 
         let query = 'SELECT Ages.age_range AS age, Users.app_name, Users.daily_check, \
         Users.gender, Users.weather_service, Ages.age_range, Income.income, Users.us_region, Likelihoods.likelihood AS Smartwatch_Likelihood, \
@@ -77,18 +94,11 @@ app.get('/weatherbyage/:age', (req, res) => {
         INNER JOIN Likelihoods ON Users.use_smartwatch = Likelihoods.id WHERE Users.age_range = ?;'
         db.all(query, age, (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
             console.log(err);
-            //console.log(rows);
 
-
-            if(age != 0 && age != 1 && age != 2 && age != 3){
+            if(rows.length == 0){
                 res.json({error: "No age range under the id of " + age + " found on this website"});
                 return;
             }
-
-            /*if(rows[0].age == undefined){
-                res.json({error: "No age range under the id of " + age + " found on this website"});
-                return;
-            }*/
             
             let response = template.toString();
 
@@ -98,7 +108,7 @@ app.get('/weatherbyage/:age', (req, res) => {
             response = response.replace('%%AGE%%', 'Age Range: ' + rows[0].age);
 
 
-            // CODE FOR GRAPH ON HOW OFTEN
+            // CODE FOR GRAPH ON HOW LIKELY
 
             var counter = 0;
             let i;
@@ -131,6 +141,7 @@ app.get('/weatherbyage/:age', (req, res) => {
             response = response.replace("%%VERY_LIKELY%%", counter);
 
 
+            // Create age_table and fill with all the data from the query
             let age_table = '';
 
             for(i=0; i< rows.length; i++){
@@ -145,9 +156,15 @@ app.get('/weatherbyage/:age', (req, res) => {
             response = response.replace('%%WEATHER_INFO%%', age_table);
         
 
-            response = response.replace('%%NEXT_PAGE%%', next);
-            response = response.replace('%%PREV_PAGE%%', prev);
-            res.status(200).type('html').send(response);            
+            //If this function finished first, return
+            if(one_finished == true){
+                console.log('PREV: ' + prev);
+                response = response.replace('%%NEXT_PAGE%%', next);
+                response = response.replace('%%PREV_PAGE%%', prev);
+                res.status(200).type('html').send(response);  
+            }     
+
+            one_finished = true;        
         });
     });
 });
@@ -170,9 +187,12 @@ app.get('/weatherbyincome/:income', (req, res) => {
         // modify `template` and send response
         // this will require a query to the SQL database
         let income = req.params.income;
+
+        // Get the previous and next button inputs
         let q = 'SELECT id FROM Income';
         let prev;
         let next;
+        var one_finished = false;
         db.all(q, [], (err, rows) => {
             let i;
             for (i=0; i<rows.length; i++){
@@ -193,7 +213,19 @@ app.get('/weatherbyincome/:income', (req, res) => {
                 }
             }
             console.log('PREV: ' + prev);
+
+            //If this function finished first, return
+            if(one_finished == true){
+                console.log('PREV: ' + prev);
+                response = response.replace('%%NEXT_PAGE%%', next);
+                response = response.replace('%%PREV_PAGE%%', prev);
+                res.status(200).type('html').send(response);  
+            }     
+
+            one_finished = true;
         });
+
+        // Query for the SQL database information
 
         let query = 'SELECT Income.income AS income, Users.app_name, Users.daily_check, \
         Users.gender, Users.weather_service, Ages.age_range, Income.income, Users.us_region, Likelihoods.likelihood AS Smartwatch_Likelihood, \
@@ -203,12 +235,12 @@ app.get('/weatherbyincome/:income', (req, res) => {
 
         db.all(query, income, (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
             console.log(err);
-            //console.log(rows);
 
-            //if(income != 0 && income != 0 && income != 1 && income != 2 && income != 3 && income != 4 && income != 5 && income != 6 && income != 7 && income != 8 && income != 9 && income != 10){
-              //  res.json({error: "No income range under the id of " + income + " found on this website"});
-                //return;
-            //}
+            // Get dynamic error
+            if(rows.length == 0){
+                res.json({error: "No income range under the id of " + income + " found on this website"});
+                return;
+            }
 
             let response = template.toString();
 
@@ -273,6 +305,7 @@ app.get('/weatherbyincome/:income', (req, res) => {
             response = response.replace("%%NEW_ENGLAND%%", counter);
 
 
+            // Income table getting information from the query
             let income_table = '';
 
             for(i=0; i< rows.length; i++){
@@ -286,10 +319,15 @@ app.get('/weatherbyincome/:income', (req, res) => {
             }
             response = response.replace('%%WEATHER_INFO%%', income_table);
         
-            console.log('PREV: ' + prev);
-            response = response.replace('%%NEXT_PAGE%%', next);
-            response = response.replace('%%PREV_PAGE%%', prev);
-            res.status(200).type('html').send(response);            
+            //If this function finished first, return
+            if(one_finished == true){
+                console.log('PREV: ' + prev);
+                response = response.replace('%%NEXT_PAGE%%', next);
+                response = response.replace('%%PREV_PAGE%%', prev);
+                res.status(200).type('html').send(response);  
+            }     
+
+            one_finished = true;          
         });
     });
 });
@@ -319,12 +357,15 @@ app.get('/weatherbyservices/:services', (req, res) => {
         Services ON Users.weather_service = Services.id INNER JOIN Income ON Users.income_range = Income.id \
         INNER JOIN Likelihoods ON Users.use_smartwatch = Likelihoods.id WHERE Users.weather_service = ?;'
 
-
+        // Previous and next buttons for webpage
         let services = req.params.services.toUpperCase();
         let q = 'SELECT id FROM Services';
         let prev;
         let next;
+        var one_finished = false;
+
         db.all(q, [], (err, rows) => {
+
             let i;
             for (i=0; i<rows.length; i++){
                 console.log('id: ' + rows[i].id + ' AGE: ' + services);
@@ -344,12 +385,24 @@ app.get('/weatherbyservices/:services', (req, res) => {
                 }
             }
             console.log('PREV: ' + prev);
+
+            //If this function finished first, return
+            if(one_finished == true){
+                console.log('PREV: ' + prev);
+                response = response.replace('%%NEXT_PAGE%%', next);
+                response = response.replace('%%PREV_PAGE%%', prev);
+                res.status(200).type('html').send(response);  
+            }     
+
+            one_finished = true;
         });
+
+
         db.all(query, services, (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
             console.log(err);
-            //console.log(rows);
 
-            if(services != 'D' && services != 'A' && services != 'W' && services != 'L' && services != 'I' && services != 'N' && services != 'R' && services != 'E'){
+            // Throw and error if the input does not exist
+            if(rows.length == 0){
                 res.json({error: "No service under the id of " + services + " found on this website"});
                 return;
             }
@@ -393,6 +446,7 @@ app.get('/weatherbyservices/:services', (req, res) => {
             response = response.replace("%%60%%", counter);
 
 
+            // Create a services table and fill it with information from the query
             let services_table = '';
 
             for(i=0; i< rows.length; i++){
@@ -406,11 +460,15 @@ app.get('/weatherbyservices/:services', (req, res) => {
             }
             response = response.replace('%%WEATHER_INFO%%', services_table);
         
-
-            console.log('PREV: ' + prev);
-            response = response.replace('%%NEXT_PAGE%%', next);
-            response = response.replace('%%PREV_PAGE%%', prev);
-            res.status(200).type('html').send(response);            
+            //If this function finished first, return
+            if(one_finished == true){
+                console.log('PREV: ' + prev);
+                response = response.replace('%%NEXT_PAGE%%', next);
+                response = response.replace('%%PREV_PAGE%%', prev);
+                res.status(200).type('html').send(response);  
+            }       
+            
+            one_finished = true;
         });
 
 
