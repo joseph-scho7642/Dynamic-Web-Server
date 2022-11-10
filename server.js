@@ -49,11 +49,6 @@ app.get('/weatherbyage/:age', (req, res) => {
         let prev;
         let next;
         db.all(q, [], (err, rows) => {
-            //console.log(err);
-            //console.log(rows);
-            
-
-
             let i;
             for (i=0; i<rows.length; i++){
                 console.log('id: ' + rows[i].id + ' AGE: ' + age);
@@ -173,6 +168,31 @@ app.get('/weatherbyincome/:income', (req, res) => {
     fs.readFile(path.join(template_dir, 'income.html'), (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
+        let income = req.params.income;
+        let q = 'SELECT id FROM Income';
+        let prev;
+        let next;
+        db.all(q, [], (err, rows) => {
+            let i;
+            for (i=0; i<rows.length; i++){
+                console.log('id: ' + rows[i].id + ' AGE: ' + income);
+                if(rows[i].id == age){
+                    if(i==0){
+                        prev = rows[rows.length-1].id;
+                        next = rows[i+1].id;
+                    }
+                    else if(i == rows.length-1){
+                        prev = rows[i-1].id;
+                        next = rows[0].id;
+                    }
+                    else{
+                        prev = rows[i-1].id;
+                        next = rows[i+1].id;
+                    }
+                }
+            }
+            console.log('PREV: ' + prev);
+        });
 
         let query = 'SELECT Income.income AS income, Users.app_name, Users.daily_check, \
         Users.gender, Users.weather_service, Ages.age_range, Income.income, Users.us_region, Likelihoods.likelihood AS Smartwatch_Likelihood, \
@@ -180,8 +200,6 @@ app.get('/weatherbyincome/:income', (req, res) => {
         Services ON Users.weather_service = Services.id INNER JOIN Income ON Users.income_range = Income.id \
         INNER JOIN Likelihoods ON Users.use_smartwatch = Likelihoods.id WHERE Users.income_range = ?;'
 
-
-        let income = req.params.income;
         db.all(query, income, (err, rows) =>{ // We are doing cereal/a but the manufacturer is A
             console.log(err);
             //console.log(rows);
