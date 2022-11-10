@@ -97,16 +97,13 @@ app.get('/weatherbyage/:age', (req, res) => {
             
             let response = template.toString();
 
-            //let anychart = require('./public/js/anychart');
-            //console.log(anychart);
-            //let response_chart = toString(anychart.draw); // 'Calling the draw of anydraw
-
-
             response = response.replace('%%AGE_IMAGE%%', '/images/' + age + '_age.jpg');
             response = response.replace('%%AGE_ALT_TEXT%%', 'Picture of ' + rows[0].age);
 
             response = response.replace('%%AGE%%', 'Age Range: ' + rows[0].age);
 
+
+            // 
             var counter = 0;
             let i;
             for(i=0; i<rows.length; i++){
@@ -138,10 +135,7 @@ app.get('/weatherbyage/:age', (req, res) => {
             response = response.replace("%%VERY_LIKELY%%", counter);
 
 
-
             let age_table = '';
-
- 
 
             for(i=0; i< rows.length; i++){
                 age_table = age_table + '<tr><td>' + rows[i].service + '</td>';
@@ -161,6 +155,17 @@ app.get('/weatherbyage/:age', (req, res) => {
         });
     });
 });
+
+
+
+
+
+
+
+
+
+
+
 
 // GET request handler for cereal a from a specific manufacturer
 app.get('/weatherbyincome/:income', (req, res) => {
@@ -216,6 +221,18 @@ app.get('/weatherbyincome/:income', (req, res) => {
 
     });
 });
+
+
+
+
+
+
+
+
+
+
+
+
 
 // GET request handler for cereal a from a specific manufacturer
 app.get('/weatherbyservices/:services', (req, res) => {
