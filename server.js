@@ -176,7 +176,7 @@ app.get('/weatherbyincome/:income', (req, res) => {
             let i;
             for (i=0; i<rows.length; i++){
                 console.log('id: ' + rows[i].id + ' AGE: ' + income);
-                if(rows[i].id == age){
+                if(rows[i].id == income){
                     if(i==0){
                         prev = rows[rows.length-1].id;
                         next = rows[i+1].id;
