@@ -8,6 +8,9 @@
 	<title>Weather Checking</title>
     <link rel="stylesheet" href="/css/foundation.css"/>
     <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-core.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-pie.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-base.min.js"></script>
 </head>
 <body>
     <div class="grid-container show-for-large">
@@ -31,6 +34,36 @@
             <img id="income_img" src="%%INCOME_IMAGE%%" alt="%%INCOME_ALT_TEXT%%" />
             <!--<img id="manufacturer_img" src="%%MFR_IMAGE%%" alt="%%MFR_ALT_TEXT%%" />-->
             <h1 class="center">%%INCOME_RANGE%%</h1>
+
+
+            <div id="container" style="width: 100%; height: 100%"></div>
+            <script>
+                // create data
+                var data = [
+                        {x: "Mountain", value: "%%%%MOUNTAIN%%%%"},
+                        {x: "Pacific", value: "%%%%PACIFIC%%%%"},
+                        {x: "West North Central", value: "%%WEST_NORTH_CENTRAL%%"},
+                        {x: "East North Central", value: "%%EAST_NORTH_CENTRAL%%"},
+                        {x: "Middle Atlantic", value: "%%MIDDLE_ATLANTIC%%"},
+                        {x: "South Atlantic", value: "%%SOUTH_ATLANTIC%%"},
+                        {x: "New England", value: "%%NEW_ENGLAND%%"}
+                    ];
+                    
+                    // create a pie chart and set the data
+                    chart = anychart.pie(data);
+                    
+                    /* set the inner radius
+                    (to turn the pie chart into a doughnut chart)*/
+                    chart.innerRadius("30%");
+                    
+                    // set the container id
+                    chart.container("container");
+                    
+                    // initiate drawing the chart
+                    chart.draw();
+            </script>
+
+
             <div class="clear"></div>
             <table>
                 <thead>

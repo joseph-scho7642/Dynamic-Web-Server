@@ -98,7 +98,8 @@ app.get('/weatherbyage/:age', (req, res) => {
             response = response.replace('%%AGE%%', 'Age Range: ' + rows[0].age);
 
 
-            // 
+            // CODE FOR GRAPH ON HOW OFTEN
+
             var counter = 0;
             let i;
             for(i=0; i<rows.length; i++){
@@ -217,8 +218,63 @@ app.get('/weatherbyincome/:income', (req, res) => {
 
             response = response.replace('%%INCOME_RANGE%%', 'Income Range: ' + rows[0].income);
 
-            let income_table = '';
+
+            // CODE FOR GRAPH ON REGIONS
+            var counter = 0;
             let i;
+            for(i=0; i<rows.length; i++){
+                if(rows[i].us_region == "Mountain"){
+                    counter++;
+                }
+            }
+            response = response.replace("%%MOUNTAIN%%", counter);
+            counter = 0;
+            for(i=0; i<rows.length; i++){
+                if(rows[i].us_region == "Pacific"){
+                    counter++;
+                }
+            }
+            response = response.replace("%%PACIFIC%%", counter);
+            counter = 0;
+            for(i=0; i<rows.length; i++){
+                if(rows[i].us_region == "West North Central"){
+                    counter++;
+                }
+            }
+            response = response.replace("%%WEST_NORTH_CENTRAL%%", counter);
+            counter = 0;
+            for(i=0; i<rows.length; i++){
+                if(rows[i].us_region == "East North Central"){
+                    counter++;
+                }
+            }
+            response = response.replace("%%EAST_NORTH_CENTRAL%%", counter);
+            counter = 0;
+            for(i=0; i<rows.length; i++){
+                if(rows[i].us_region == "Middle Atlantic"){
+                    counter++;
+                }
+            }
+            response = response.replace("%%MIDDLE_ATLANTIC%%", counter);
+            counter = 0;
+            counter = 0;
+            for(i=0; i<rows.length; i++){
+                if(rows[i].us_region == "South Atlantic"){
+                    counter++;
+                }
+            }
+            response = response.replace("%%SOUTH_ATLANTIC%%", counter);
+            counter = 0;
+            for(i=0; i<rows.length; i++){
+                if(rows[i].us_region == "New England"){
+                    counter++;
+                }
+            }
+            response = response.replace("%%NEW_ENGLAND%%", counter);
+
+
+            let income_table = '';
+
             for(i=0; i< rows.length; i++){
                 income_table = income_table + '<tr><td>' + rows[i].service + '</td>';
                 income_table = income_table + '<td>' + rows[i].app_name + '</td>';
@@ -305,8 +361,40 @@ app.get('/weatherbyservices/:services', (req, res) => {
 
             response = response.replace('%%SERVICE%%', 'Service: ' + rows[0].service);
 
-            let services_table = '';
+            // CODE ON GRAPH FOR AGE
+            var counter = 0;
             let i;
+            for(i=0; i<rows.length; i++){
+                if(rows[i].age_range == "18-29"){
+                    counter++;
+                }
+            }
+            response = response.replace("%%18-29%%", counter);
+            counter = 0;
+            for(i=0; i<rows.length; i++){
+                if(rows[i].age_range == "30-44"){
+                    counter++;
+                }
+            }
+            response = response.replace("%%30-44%%", counter);
+            counter = 0;
+            for(i=0; i<rows.length; i++){
+                if(rows[i].age_range == "45-59"){
+                    counter++;
+                }
+            }
+            response = response.replace("%%45-59%%", counter);
+            counter = 0;
+            for(i=0; i<rows.length; i++){
+                if(rows[i].age_range == "60+"){
+                    counter++;
+                }
+            }
+            response = response.replace("%%60%%", counter);
+
+
+            let services_table = '';
+
             for(i=0; i< rows.length; i++){
                 services_table = services_table + '<tr><td>' + rows[i].service + '</td>';
                 services_table = services_table + '<td>' + rows[i].app_name + '</td>';
