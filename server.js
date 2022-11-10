@@ -89,11 +89,16 @@ app.get('/weatherbyage/:age', (req, res) => {
                 res.json({error: "No age range under the id of " + age + " found on this website"});
                 return;
             }
+
+            /*if(rows[0].age == undefined){
+                res.json({error: "No age range under the id of " + age + " found on this website"});
+                return;
+            }*/
             
             let response = template.toString();
 
-            let anychart = require('./public/js/anychart');
-            console.log(anychart);
+            //let anychart = require('./public/js/anychart');
+            //console.log(anychart);
             //let response_chart = toString(anychart.draw); // 'Calling the draw of anydraw
 
 
@@ -102,8 +107,40 @@ app.get('/weatherbyage/:age', (req, res) => {
 
             response = response.replace('%%AGE%%', 'Age Range: ' + rows[0].age);
 
-            let age_table = '';
+            var counter = 0;
             let i;
+            for(i=0; i<rows.length; i++){
+                if(rows[i].Smartwatch_Likelihood == "very unlikely"){
+                    counter++;
+                }
+            }
+            response = response.replace("%%VERY_UNLIKELY%%", counter);
+            counter = 0;
+            for(i=0; i<rows.length; i++){
+                if(rows[i].Smartwatch_Likelihood == "somewhat unlikely"){
+                    counter++;
+                }
+            }
+            response = response.replace("%%SOMEWHAT_UNLIKELY%%", counter);
+            counter = 0;
+            for(i=0; i<rows.length; i++){
+                if(rows[i].Smartwatch_Likelihood == "somewhat likely"){
+                    counter++;
+                }
+            }
+            response = response.replace("%%SOMEWHAT_LIKELY%%", counter);
+            counter = 0;
+            for(i=0; i<rows.length; i++){
+                if(rows[i].Smartwatch_Likelihood == "very likely"){
+                    counter++;
+                }
+            }
+            response = response.replace("%%VERY_LIKELY%%", counter);
+
+
+
+            let age_table = '';
+
  
 
             for(i=0; i< rows.length; i++){
