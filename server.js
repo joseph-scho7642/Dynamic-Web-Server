@@ -47,6 +47,7 @@ app.get('/weatherbyage/:age', (req, res) => {
         //let query = 'SELECT * FROM Users'
 
         let age = req.params.age;
+        let response = template.toString();
 
         // Previous and next buttons!
         let q = 'SELECT id FROM Ages';
@@ -100,7 +101,6 @@ app.get('/weatherbyage/:age', (req, res) => {
                 return;
             }
             
-            let response = template.toString();
 
             response = response.replace('%%AGE_IMAGE%%', '/images/' + age + '_age.jpg');
             response = response.replace('%%AGE_ALT_TEXT%%', 'Picture of ' + rows[0].age);
@@ -187,6 +187,7 @@ app.get('/weatherbyincome/:income', (req, res) => {
         // modify `template` and send response
         // this will require a query to the SQL database
         let income = req.params.income;
+        let response = template.toString();
 
         // Get the previous and next button inputs
         let q = 'SELECT id FROM Income';
@@ -241,8 +242,6 @@ app.get('/weatherbyincome/:income', (req, res) => {
                 res.json({error: "No income range under the id of " + income + " found on this website"});
                 return;
             }
-
-            let response = template.toString();
 
             
             response = response.replace('%%INCOME_IMAGE%%', '/images/' + income + '_income.jpg');
@@ -357,6 +356,9 @@ app.get('/weatherbyservices/:services', (req, res) => {
         Services ON Users.weather_service = Services.id INNER JOIN Income ON Users.income_range = Income.id \
         INNER JOIN Likelihoods ON Users.use_smartwatch = Likelihoods.id WHERE Users.weather_service = ?;'
 
+
+        let response = template.toString();
+
         // Previous and next buttons for webpage
         let services = req.params.services.toUpperCase();
         let q = 'SELECT id FROM Services';
@@ -406,8 +408,6 @@ app.get('/weatherbyservices/:services', (req, res) => {
                 res.json({error: "No service under the id of " + services + " found on this website"});
                 return;
             }
-
-            let response = template.toString();
 
             response = response.replace('%%SERVICES_IMAGE%%', '/images/' + services + '_services.jpg');
             response = response.replace('%%SERVICES_ALT_TEXT%%', 'Picture of ' + rows[0].service);
