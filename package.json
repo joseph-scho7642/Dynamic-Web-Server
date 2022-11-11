@@ -19,7 +19,7 @@
     "main": "server.js",
     "repository": {
         "type": "git",
-        "url": "https://joseph-scho7642.github.io/"
+        "url": "https://github.com/joseph-scho7642/Dynamic-Web-Server"
     },
     "dependencies": {
         "express": "^4.18.2",
